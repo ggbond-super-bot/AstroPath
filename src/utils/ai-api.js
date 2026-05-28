@@ -10,15 +10,15 @@ const _debug = import.meta.env.DEV ? (...args) => console.log('[AI API]', ...arg
 const IS_DEV = import.meta.env.DEV
 
 function resolveApiUrl(provider) {
-  if (!provider.baseUrl) return '/ai-proxy/chat/completions'
-  if (IS_DEV && provider.baseUrl.startsWith('http')) {
-    try {
-      const url = new URL(provider.baseUrl)
-      return `/ai-proxy/chat/completions`
-    } catch {
-      return `${provider.baseUrl}/chat/completions`
-    }
+  if (IS_DEV) {
+    // 开发环境：Vite 代理所有请求到智谱
+    return '/ai-proxy/chat/completions'
   }
+  if (provider.isDefault) {
+    // 生产环境默认 provider：走后端代理，key 保存在服务端
+    return '/api/ai-proxy'
+  }
+  // 自定义 provider：直连
   return `${provider.baseUrl}/chat/completions`
 }
 
@@ -63,8 +63,11 @@ export async function sendMessageToAI(providerId, messages, options = {}, extern
     throw new AIError('config', 'AI服务提供商未找到，请检查配置')
   }
 
-  if (!provider.apiKey || !provider.baseUrl) {
-    throw new AIError('config', 'AI服务配置不完整，请完善API Key和Base URL')
+  // 生产环境默认 provider 的 key 在后端，跳过前端校验
+  if (!provider.isDefault || IS_DEV) {
+    if (!provider.apiKey || !provider.baseUrl) {
+      throw new AIError('config', 'AI服务配置不完整，请完善API Key和Base URL')
+    }
   }
 
   // 检查provider类型支持
@@ -94,13 +97,20 @@ export async function sendMessageToAI(providerId, messages, options = {}, extern
     _debug('[AI API] Requesting:', apiUrl, '| model:', provider.model, '| provider:', provider.name)
     _debug('[AI API] Full URL will be proxied to:', provider.baseUrl, '/chat/completions')
 
+    const useProxy = !IS_DEV && provider.isDefault
+    const fetchHeaders = { 'Content-Type': 'application/json' }
+    const fetchBody = useProxy
+      ? JSON.stringify({ ...requestBody, apiKey: provider.apiKey || undefined })
+      : JSON.stringify(requestBody)
+
+    if (!useProxy) {
+      fetchHeaders['Authorization'] = `Bearer ${provider.apiKey}`
+    }
+
     const response = await fetch(apiUrl, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${provider.apiKey}`
-      },
-      body: JSON.stringify(requestBody),
+      headers: fetchHeaders,
+      body: fetchBody,
       signal: controller.signal
     })
 
