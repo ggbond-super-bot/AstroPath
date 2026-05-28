@@ -156,7 +156,7 @@
                   {{ provider.baseUrl }}
                 </td>
                 <td class="cell-key">
-                  {{ '*'.repeat(provider.apiKey?.length || 0) }}
+                  {{ provider.apiKey ? '••••••••' : '未设置' }}
                 </td>
                 <td
                   class="cell-mono"
@@ -491,7 +491,7 @@
 <script setup>
 import { ref, computed, reactive, onMounted, onUnmounted } from 'vue'
 import { testProviderConnection } from '@/utils/ai-api'
-import { ZHIPU_MODEL_ID } from '@/composables/useAIConfig'
+import { ZHIPU_MODEL_ID, DEFAULT_PROVIDER } from '@/composables/useAIConfig'
 
 const zhipuModelName = computed(() =>
   '智谱 ' + ZHIPU_MODEL_ID.split('-').map((p, i) => i === 0 ? p.toUpperCase() : p.charAt(0).toUpperCase() + p.slice(1)).join('-')
@@ -596,7 +596,7 @@ const addZhipuPreset = () => {
     name: zhipuModelName.value + '（推荐）',
     type: 'domestic',
     baseUrl: 'https://open.bigmodel.cn/api/paas/v4',
-    apiKey: '',
+    apiKey: DEFAULT_PROVIDER.apiKey || '',
     model: ZHIPU_MODEL_ID,
     status: 'untested',
     id: Date.now(),

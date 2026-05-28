@@ -165,34 +165,26 @@ function buildRequestBody(provider, messages, options) {
   }
 
   // 思考模式特殊处理
-  // 注意：GLM-Z1-Flash 等推理模型默认内置深度思考，不需要额外参数启用
-  // 思考内容会通过 reasoning_content 字段自动返回
   if (options.enableThinking) {
     if (provider.type === 'anthropic') {
       // (anthropic 类型在下面单独处理)
     }
-    // GLM-Z1 系列模型默认内置深度思考，不需要 enable_thinking 参数
-    // 如果模型名包含 z1，不添加任何思考相关参数
-    else if (provider.model?.toLowerCase().includes('z1')) {
-      // GLM-Z1-Flash 等模型默认内置深度思考，无需额外参数
-    }
     else if (provider.type === 'domestic' || provider.type === 'other') {
-      // 其他国内模型可能需要 enable_thinking 参数
       baseBody.enable_thinking = true
     } else {
       baseBody.enable_thinking = true
     }
-    
+
     if (provider.type === 'deepseek' || provider.model?.toLowerCase().includes('deepseek')) {
       baseBody.max_thinking_tokens = 8000
     }
-    
+
     if (!baseBody.max_tokens) {
       baseBody.max_tokens = 8192
     }
   } else {
-    // 不启用思考模式时，对非 Z1 模型禁用 thinking
-    if ((provider.type === 'domestic' || provider.type === 'other') && !provider.model?.toLowerCase().includes('z1')) {
+    // 不启用思考模式时，对支持思考的模型显式禁用
+    if (provider.type === 'domestic' || provider.type === 'other') {
       baseBody.thinking = {
         type: 'disabled'
       }
@@ -203,12 +195,7 @@ function buildRequestBody(provider, messages, options) {
   
   // 设置 max_tokens（如果提供了且大于0）
   if (options.maxTokens && options.maxTokens > 0) {
-    // glm-z1 系列模型 max_tokens 限制较小
-    if (provider.model?.toLowerCase().includes('z1')) {
-      baseBody.max_tokens = Math.min(options.maxTokens, 8192)
-    } else {
-      baseBody.max_tokens = options.maxTokens
-    }
+    baseBody.max_tokens = options.maxTokens
   }
 
   if (provider.type === 'anthropic') {
@@ -624,8 +611,7 @@ export function buildSystemPrompt(agentId, userData = null, enableThinking = fal
 
   let basePrompt = prompts[agentId] || '你是一个有用的助手。'
 
-  // GLM-Z1-Flash 等推理模型默认内置深度思考
-  // 思考内容直接输出到 content 中，需要用特定格式包裹以便前端分离显示
+  // 思考模式下，思考内容直接输出到 content 中，需要用特定格式包裹以便前端分离显示
   if (enableThinking) {
     basePrompt += `
 

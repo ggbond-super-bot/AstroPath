@@ -1221,7 +1221,7 @@ const assessmentAI = useAIStream({
 
 // Providers
 const providers = ref([
-  { id: 'default', name: '智谱 GLM-Z1-Flash' },
+  { id: 'default', name: '智谱 GLM-4-Flash' },
   { id: 'openai', name: 'OpenAI GPT-4' }
 ])
 
