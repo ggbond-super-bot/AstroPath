@@ -584,7 +584,9 @@ export async function testProviderConnection(providerId) {
   }
 
   if (!provider.apiKey || !provider.baseUrl) {
-    return { success: false, error: '配置不完整', errorType: 'config' }
+    if (!provider.isDefault || IS_DEV) {
+      return { success: false, error: '配置不完整', errorType: 'config' }
+    }
   }
 
   try {
