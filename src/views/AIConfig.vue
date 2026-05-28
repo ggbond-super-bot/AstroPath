@@ -600,6 +600,7 @@ const addZhipuPreset = () => {
     model: ZHIPU_MODEL_ID,
     status: 'untested',
     id: Date.now(),
+    isDefault: true,
     supportsThinking: true
   })
   saveProviders()
