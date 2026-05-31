@@ -5,13 +5,17 @@
 :root {
   /* ==================== 主色系 (唯一交互色) ==================== */
   --color-solid: #0F172A;
+  --color-solid-rgb: 15, 23, 42;
   --color-solid-hover: #1E293B;
 
   /* ==================== 强调色 (唯一彩色，极度克制) ==================== */
   /* 仅用于: 标题下划线、活跃状态、footer 光线、极少量点缀 */
   --color-accent: #D97706;
-  --color-accent-light: #FBBF24;
+  --color-accent-rgb: 217, 119, 6;
+  --color-accent-light: #F59E0B;
+  --color-accent-soft: #FBBF24;
   --color-accent-subtle: #FEF3C7;
+  --color-accent-bg: #FFF7ED;
 
   /* ==================== 功能色 (标准语义) ==================== */
   --color-success: #059669;
@@ -24,7 +28,9 @@
 
   --color-danger: #DC2626;
   --color-danger-light: #EF4444;
+  --color-danger-dark: #B91C1C;
   --color-danger-bg: #FEF2F2;
+  --color-danger-bg-light: #FEE2E2;
 
   --color-info: #0284C7;
   --color-info-light: #38BDF8;
