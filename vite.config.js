@@ -1,9 +1,18 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { resolve } from 'path'
+import Components from 'unplugin-vue-components/vite'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [
+    vue(),
+    Components({
+      resolvers: [
+        ElementPlusResolver({ importStyle: 'css' }),
+      ],
+    }),
+  ],
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src')
@@ -30,12 +39,13 @@ export default defineConfig({
     }
   },
   build: {
+    target: 'es2020',
     rollupOptions: {
       output: {
         manualChunks: {
           'vendor-vue': ['vue', 'vue-router'],
-          'vendor-ui': ['element-plus', '@element-plus/icons-vue'],
-          'vendor-chart': ['echarts', 'vue-echarts'],
+          'vendor-icons': ['@element-plus/icons-vue'],
+          'vendor-chart': ['echarts/core', 'echarts/charts', 'echarts/components', 'echarts/renderers'],
           'vendor-markdown': ['marked', 'dompurify'],
         }
       }

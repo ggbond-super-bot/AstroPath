@@ -51,3 +51,9 @@ echarts/
 
 # Local Netlify folder
 .netlify
+
+# Auto-generated plugin files
+auto-imports.d.ts
+components.d.ts
+.playwright-mcp/
+.omc/
