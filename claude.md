@@ -103,3 +103,10 @@ BEM 格式，统一 `ud-` 前缀：
 ### 安全红线
 
 `AIConfig.vue` 内含硬编码 API Key，严禁 git 提交、严禁公开暴露。
+
+### 分支策略
+
+- **`master`** — 稳定版本，**禁止直接 merge 任何 refactor/ 分支**
+- **`refactor/audit-fixes`** — 当前开发分支，所有改动在此进行
+- **永远不要执行 `git merge` 到 master**，除非用户明确要求并已确认
+- 需要同步 master 更新时，用 `git rebase master` 而非 merge
