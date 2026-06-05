@@ -8,9 +8,9 @@ export default async (request) => {
 
   try {
     const body = await request.json()
-    const { apiKey: userApiKey, targetUrl, ...requestBody } = body
+    const { targetUrl, ...requestBody } = body
 
-    const apiKey = userApiKey || process.env.ZHIPU_API_KEY
+    const apiKey = process.env.ZHIPU_API_KEY
     if (!apiKey) {
       return new Response(JSON.stringify({ error: 'No API key available' }), {
         status: 401,

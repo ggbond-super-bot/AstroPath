@@ -25,7 +25,7 @@ const DEFAULT_PROVIDER: AIProvider = {
   id: 'provider-default-zhipu',
   name: '智谱 GLM-4-Flash',
   type: 'domestic',
-  apiKey: import.meta.env.VITE_ZHIPU_API_KEY || '',
+  apiKey: '',
   baseUrl: 'https://open.bigmodel.cn/api/paas/v4',
   model: ZHIPU_MODEL_ID,
   isDefault: true,

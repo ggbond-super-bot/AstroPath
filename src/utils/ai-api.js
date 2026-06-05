@@ -96,9 +96,7 @@ export async function sendMessageToAI(providerId, messages, options = {}, extern
 
     const useProxy = provider.isDefault
     const fetchHeaders = { 'Content-Type': 'application/json' }
-    const fetchBody = useProxy
-      ? JSON.stringify({ ...requestBody, apiKey: provider.apiKey || undefined })
-      : JSON.stringify(requestBody)
+const fetchBody = JSON.stringify(requestBody)
 
     if (!useProxy) {
       fetchHeaders['Authorization'] = `Bearer ${provider.apiKey}`
