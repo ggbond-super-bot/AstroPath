@@ -1264,8 +1264,11 @@ function goToScene(index) {
   assessmentState.saveScene(index)
   if (index === 4) {
     nextTick(() => {
-      initRadarChart()
-      animateScore(overallScore.value)
+      // Delay chart init until scene transition completes (CSS transition is 600ms)
+      setTimeout(() => {
+        initRadarChart()
+        animateScore(overallScore.value)
+      }, 300)
     })
   }
 }
@@ -1429,6 +1432,8 @@ function initRadarChart() {
       }]
     }]
   })
+  // Ensure chart recalculates dimensions after container becomes visible
+  requestAnimationFrame(() => radarChart.resize())
 }
 
 async function generateReport() {
@@ -1557,7 +1562,7 @@ function initParticles() {
       // Draw particle
       ctx.beginPath()
       ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2)
-      ctx.fillStyle = 'rgba(var(--color-solid-rgb), 0.15)'
+      ctx.fillStyle = 'rgba(217, 119, 6, 0.25)'
       ctx.fill()
 
       // Draw connections
@@ -1568,7 +1573,7 @@ function initParticles() {
           ctx.beginPath()
           ctx.moveTo(p.x, p.y)
           ctx.lineTo(p2.x, p2.y)
-          ctx.strokeStyle = `rgba(var(--color-solid-rgb), ${0.1 * (1 - d / 120)})`
+          ctx.strokeStyle = `rgba(217, 119, 6, ${0.15 * (1 - d / 120)})`
           ctx.stroke()
         }
       }
@@ -1624,8 +1629,10 @@ onMounted(() => {
     // Initialize radar chart and score animation if restored to results page
     if (savedScene === 4) {
       nextTick(() => {
-        initRadarChart()
-        animateScore(overallScore.value)
+        setTimeout(() => {
+          initRadarChart()
+          animateScore(overallScore.value)
+        }, 300)
       })
     }
   }

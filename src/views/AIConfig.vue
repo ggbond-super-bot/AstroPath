@@ -109,7 +109,11 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
               >
-                <circle cx="12" cy="12" r="10" />
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="10"
+                />
                 <path d="M12 16v-4m0-4h.01" />
               </svg>
             </div>
@@ -118,7 +122,11 @@
               <span class="notice-divider" />
               <span class="notice-text">
                 使用 AI 功能，需先免费申请一个智谱 API Key 😊
-                申请地址：<a href="https://www.bigmodel.cn/apikey/platform" target="_blank" rel="noopener">https://www.bigmodel.cn/apikey/platform</a>
+                申请地址：<a
+                  href="https://www.bigmodel.cn/apikey/platform"
+                  target="_blank"
+                  rel="noopener"
+                >https://www.bigmodel.cn/apikey/platform</a>
               </span>
             </div>
           </div>

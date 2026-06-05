@@ -10,12 +10,9 @@ const _debug = import.meta.env.DEV ? (...args) => console.log('[AI API]', ...arg
 const IS_DEV = import.meta.env.DEV
 
 function resolveApiUrl(provider) {
-  if (IS_DEV) {
-    // 开发环境：Vite 代理所有请求到智谱
-    return '/ai-proxy/chat/completions'
-  }
   if (provider.isDefault) {
-    // 生产环境默认 provider：走后端代理，key 保存在服务端
+    // 默认 provider（智谱）总是通过后端代理
+    // 开发与生产环境都使用相对路径，由 Vite/Netlify 代理到智谱 API
     return '/api/ai-proxy'
   }
   // 自定义 provider：直连
@@ -63,8 +60,8 @@ export async function sendMessageToAI(providerId, messages, options = {}, extern
     throw new AIError('config', 'AI服务提供商未找到，请检查配置')
   }
 
-  // 生产环境默认 provider 的 key 在后端，跳过前端校验
-  if (!provider.isDefault || IS_DEV) {
+  // 非默认 provider 需要前端配置完整信息
+  if (!provider.isDefault) {
     if (!provider.apiKey || !provider.baseUrl) {
       throw new AIError('config', 'AI服务配置不完整，请完善API Key和Base URL')
     }
@@ -97,7 +94,7 @@ export async function sendMessageToAI(providerId, messages, options = {}, extern
     _debug('[AI API] Requesting:', apiUrl, '| model:', provider.model, '| provider:', provider.name)
     _debug('[AI API] Full URL will be proxied to:', provider.baseUrl, '/chat/completions')
 
-    const useProxy = !IS_DEV && provider.isDefault
+    const useProxy = provider.isDefault
     const fetchHeaders = { 'Content-Type': 'application/json' }
     const fetchBody = useProxy
       ? JSON.stringify({ ...requestBody, apiKey: provider.apiKey || undefined })
@@ -583,8 +580,9 @@ export async function testProviderConnection(providerId) {
     return { success: false, error: 'Provider未找到', errorType: 'config' }
   }
 
-  if (!provider.apiKey || !provider.baseUrl) {
-    if (!provider.isDefault || IS_DEV) {
+  // 非默认 provider 需要完整配置
+  if (!provider.isDefault) {
+    if (!provider.apiKey || !provider.baseUrl) {
       return { success: false, error: '配置不完整', errorType: 'config' }
     }
   }

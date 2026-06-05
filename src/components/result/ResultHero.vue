@@ -25,8 +25,8 @@
           <button
             v-if="isRevealed"
             class="result-hero__easter-egg"
-            @click="showEasterEgg = true"
             aria-label="查看彩蛋"
+            @click="showEasterEgg = true"
           >
             ?
           </button>
@@ -64,26 +64,56 @@
           <div class="easter-egg-dialog">
             <button
               class="easter-egg__close"
-              @click="showEasterEgg = false"
               aria-label="关闭"
+              @click="showEasterEgg = false"
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="18" y1="6" x2="6" y2="18"/>
-                <line x1="6" y1="6" x2="18" y2="18"/>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <line
+                  x1="18"
+                  y1="6"
+                  x2="6"
+                  y2="18"
+                />
+                <line
+                  x1="6"
+                  y1="6"
+                  x2="18"
+                  y2="18"
+                />
               </svg>
             </button>
             
             <div class="easter-egg__header">
               <span class="easter-egg__badge">彩蛋</span>
-              <h2 class="easter-egg__title">发现奖品的时刻</h2>
+              <h2 class="easter-egg__title">
+                发现奖品的时刻
+              </h2>
             </div>
 
             <div class="easter-egg__content">
               <div class="easter-egg__message easter-egg__message--user">
                 <div class="easter-egg__avatar easter-egg__avatar--user">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                    <circle cx="12" cy="7" r="4"/>
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle
+                      cx="12"
+                      cy="7"
+                      r="4"
+                    />
                   </svg>
                 </div>
                 <div class="easter-egg__bubble">
@@ -93,13 +123,22 @@
 
               <div class="easter-egg__message easter-egg__message--assistant">
                 <div class="easter-egg__avatar easter-egg__avatar--assistant">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 2a10 10 0 1 0 10 10H12V2z"/>
-                    <path d="M12 12L2.05 10.7A10 10 0 0 1 10.7 2.05"/>
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M12 2a10 10 0 1 0 10 10H12V2z" />
+                    <path d="M12 12L2.05 10.7A10 10 0 0 1 10.7 2.05" />
                   </svg>
                 </div>
                 <div class="easter-egg__bubble">
-                  <p class="easter-egg__section-title">🏆 奖项设置</p>
+                  <p class="easter-egg__section-title">
+                    🏆 奖项设置
+                  </p>
                   <div class="easter-egg__prize-table">
                     <div class="easter-egg__prize-row">
                       <span class="easter-egg__prize-name">一等奖</span>
@@ -118,7 +157,9 @@
                       <span class="easter-egg__prize-item">卫生纸巾 ×1/人</span>
                     </div>
                   </div>
-                  <p class="easter-egg__section-title">😅 你们的"收获"</p>
+                  <p class="easter-egg__section-title">
+                    😅 你们的"收获"
+                  </p>
                   <p class="easter-egg__result">
                     <strong>第10名 = 参与奖 = 卫生纸巾 ×1/人</strong>
                   </p>
