@@ -1147,6 +1147,7 @@ import { CanvasRenderer } from 'echarts/renderers'
 
 echarts.use([RadarChart, RadarComponent, TooltipComponent, LegendComponent, CanvasRenderer])
 import { useAIStream } from '@/composables/useAIStream'
+import { useAIConfig } from '@/composables/useAIConfig'
 import { buildAssessmentPrompt } from '@/utils/ai-api'
 import { marked } from 'marked'
 import DOMPurify from 'dompurify'
@@ -1174,7 +1175,7 @@ const form = reactive({
 })
 
 const activeTab = ref('实习')
-const selectedProvider = ref('default')
+const selectedProvider = ref('provider-default-zhipu')
 const showAiSection = ref(true)
 const animatedScore = ref('0.0')
 let _scoreGen = 0
@@ -1225,10 +1226,8 @@ const assessmentAI = useAIStream({
 })
 
 // Providers
-const providers = ref([
-  { id: 'default', name: '智谱 GLM-4-Flash' },
-  { id: 'openai', name: 'OpenAI GPT-4' }
-])
+const aiConfig = useAIConfig()
+const providers = ref(aiConfig.getProviders())
 
 // ═══════════════ COMPUTED ═══════════════
 const gpaCircumference = 2 * Math.PI * 85

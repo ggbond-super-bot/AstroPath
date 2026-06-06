@@ -124,7 +124,8 @@ export function useAIConfig() {
   }
 
   const isConfigured = (): boolean => {
-    return true
+    const providers = getProviders()
+    return providers.some(p => p.enabled !== false)
   }
 
   const validateProvider = (provider: Partial<AIProvider>): { valid: boolean; errors: string[] } => {
