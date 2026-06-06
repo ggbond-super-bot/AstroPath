@@ -403,11 +403,13 @@ ${JSON.stringify(schoolsList, null, 2)}
       }
 
       globalState.completeAnalysis(analysis)
+ analysisStreams.delete(schoolId)
       return analysis
     } catch (err) {
       console.error('Generate analysis error:', err)
       const errorMsg = err instanceof Error ? err.message : '生成分析失败'
       globalState.setAnalysisError(errorMsg)
+ analysisStreams.delete(schoolId)
 
       return generateFallbackAnalysis(assessment, schoolId)
     }
