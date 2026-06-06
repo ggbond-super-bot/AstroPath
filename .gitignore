@@ -55,6 +55,9 @@ echarts/
 # Claude Code agents (user-level, not project source)
 .claude/agents/
 
+# Media files
+*.png *.jpg *.jpeg *.gif *.webp *.svg
+
 # Auto-generated plugin files
 auto-imports.d.ts
 components.d.ts
