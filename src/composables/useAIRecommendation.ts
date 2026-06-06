@@ -488,7 +488,7 @@ ${JSON.stringify(schoolsList, null, 2)}
     parts.push(categoryAdvice[school.category] || '')
 
     const filtered = parts.filter(Boolean)
-    const selected = filtered.slice(0, 3 + Math.floor(Math.random() * 2))
+    const selected = filtered.slice(0, 4)
 
     return selected.join('。') + '。'
   }
