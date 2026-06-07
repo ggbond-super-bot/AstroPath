@@ -46,8 +46,10 @@ element-plus/
 # ECharts
 echarts/
 
-# Testing artifacts (written to /tmp by the coding agent — not the project dir)
-# Nothing needed here: code.md instructs agents to write all test scripts to /tmp
+# Playwright test artifacts
+test-results/
+playwright-report/
+blob-report/
 
 # Local Netlify folder
 .netlify
