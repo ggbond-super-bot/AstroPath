@@ -17,13 +17,13 @@ const routes = [
     path: '/assessment',
     name: 'Assessment',
     component: () => import('@/views/Assessment.vue'),
-    meta: { title: '背景评估' }
+    meta: { title: '背景评估', keepAlive: true }
   },
   {
     path: '/school-recommendation',
     name: 'SchoolRecommendation',
     component: () => import('@/views/SchoolRecommendation.vue'),
-    meta: { title: '选校推荐' }
+    meta: { title: '选校推荐', keepAlive: true }
   },
   {
     path: '/timeline',
@@ -47,7 +47,7 @@ const routes = [
     path: '/ai-chat',
     name: 'AIChat',
     component: () => import('@/views/AIChat.vue'),
-    meta: { title: 'AI对话' }
+    meta: { title: 'AI对话', keepAlive: true }
   },
   {
     path: '/major-detail/:id',

@@ -479,7 +479,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, nextTick, watch, markRaw } from 'vue'
+import { ref, computed, onMounted, onUnmounted, onActivated, onDeactivated, nextTick, watch, markRaw } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import {
@@ -840,8 +840,24 @@ onMounted(() => {
     loadAgentSession(currentAgentId.value)
   }
 })
+// onDeactivated: called on navigation away (<keep-alive>).
+// Save state but do NOT stop the stream — it continues in background.
+onDeactivated(() => {
+  const msgs = getCurrentMessages()
+  if (msgs.length > 0) saveConversation()
+  saveCurrentState()
+})
+
+// onActivated: called when navigating back (<keep-alive>).
+// Scroll to bottom to show content that accumulated while away.
+onActivated(() => {
+  isFreshEntry = false
+  nextTick(() => scrollToBottom(true))
+})
+
+// onUnmounted: only fires on TRUE destruction (e.g. cache eviction).
+// Stop the stream and clean up.
 onUnmounted(() => {
-  // Save current conversation before leaving
   const msgs = getCurrentMessages()
   if (msgs.length > 0) saveConversation()
   saveCurrentState()

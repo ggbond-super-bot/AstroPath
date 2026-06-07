@@ -1139,7 +1139,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
+import { ref, reactive, computed, onMounted, onUnmounted, onActivated, onDeactivated, nextTick, watch } from 'vue'
 import * as echarts from 'echarts/core'
 import { RadarChart } from 'echarts/charts'
 import { RadarComponent, TooltipComponent, LegendComponent } from 'echarts/components'
@@ -1660,6 +1660,14 @@ onMounted(() => {
 onUnmounted(() => {
   if (radarChart) radarChart.dispose()
   if (cleanupParticles) cleanupParticles()
+})
+
+// onActivated: called when navigating back via <keep-alive>.
+// Resize the radar chart since the container was detached and re-attached.
+onActivated(() => {
+  if (radarChart) {
+    requestAnimationFrame(() => radarChart.resize())
+  }
 })
 </script>
 

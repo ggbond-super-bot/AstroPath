@@ -1,4 +1,4 @@
-import { computed, onMounted, onUnmounted, reactive, ref, watch, type ComputedRef } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, onActivated, onDeactivated, reactive, ref, watch, type ComputedRef } from 'vue'
 import { sendMessageToAI, AIError } from '@/utils/ai-api'
 import { useGlobalAIState, type AIStreamState, type ActiveStreamInfo, type ChatMessage, type AIStreamOptions } from './useGlobalAIState'
 import { DEFAULT_PROVIDER } from './useAIConfig'
@@ -557,9 +557,10 @@ export function useAIStream(options: UseAIStreamOptions): AIStreamResult {
   const restore = (): boolean => {
     const existingTask = globalState.getTask(taskId)
     if (existingTask) {
-      if (existingTask.state === 'thinking' || existingTask.state === 'streaming') {
-        globalState.errorTask(taskId, '任务中断，请重试')
-        return false
+      // If task is still actively streaming/thinking, the stream is running in the
+      // background (kept alive by <keep-alive>). Just bind to it — don't mark as error.
+      if (existingTask.state === 'thinking' || existingTask.state === 'streaming' || existingTask.state === 'connecting') {
+        return true
       }
       return existingTask.state === 'completed' || existingTask.state === 'error'
     }
@@ -572,6 +573,23 @@ export function useAIStream(options: UseAIStreamOptions): AIStreamResult {
     })
   }
 
+  // onDeactivated: called when <keep-alive> deactivates this component (navigation away).
+  // Do NOT abort the stream — let it continue in the background.
+  onDeactivated(() => {
+    if (scrollRafId) { cancelAnimationFrame(scrollRafId); scrollRafId = null }
+    if (rafScrollId) { cancelAnimationFrame(rafScrollId); rafScrollId = null }
+  })
+
+  // onActivated: called when <keep-alive> reactivates this component (navigation back).
+  // Scroll to bottom to show any content that accumulated while away.
+  onActivated(() => {
+    userScrollLocked = false
+    userScrolledUp.value = false
+    nextTick(() => scrollToBottom(true))
+  })
+
+  // onUnmounted: only fires on TRUE destruction (not navigation with <keep-alive>).
+  // Abort the fetch stream since the component is being permanently removed.
   onUnmounted(() => {
     if (abortController) {
       abortController.abort()
