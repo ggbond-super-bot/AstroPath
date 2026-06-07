@@ -891,6 +891,9 @@ const {
 
 let heroObserver: IntersectionObserver | null = null
 let contentObserver: IntersectionObserver | null = null
+let gridAnimFrame: number | null = null
+let gridMouseHandler: ((e: MouseEvent) => void) | null = null
+let gridResizeHandler: (() => void) | null = null
 
 function initFloatingGrid() {
   const canvas = gridCanvasRef.value
@@ -910,10 +913,11 @@ function initFloatingGrid() {
   let mouseX = width / 2
   let mouseY = height / 2
 
-  document.addEventListener('mousemove', (e) => {
+  gridMouseHandler = (e: MouseEvent) => {
     mouseX = e.clientX
     mouseY = e.clientY
-  })
+  }
+  document.addEventListener('mousemove', gridMouseHandler)
 
   let time = 0
 
@@ -989,15 +993,16 @@ function initFloatingGrid() {
       }
     }
 
-    requestAnimationFrame(animate)
+    gridAnimFrame = requestAnimationFrame(animate)
   }
 
   animate()
 
-  window.addEventListener('resize', () => {
+  gridResizeHandler = () => {
     width = canvas.width = window.innerWidth
     height = canvas.height = window.innerHeight
-  })
+  }
+  window.addEventListener('resize', gridResizeHandler)
 }
 
 const setupObservers = () => {
@@ -1026,6 +1031,18 @@ onMounted(() => {
 onUnmounted(() => {
   heroObserver?.disconnect()
   contentObserver?.disconnect()
+  if (gridAnimFrame) {
+    cancelAnimationFrame(gridAnimFrame)
+    gridAnimFrame = null
+  }
+  if (gridMouseHandler) {
+    document.removeEventListener('mousemove', gridMouseHandler)
+    gridMouseHandler = null
+  }
+  if (gridResizeHandler) {
+    window.removeEventListener('resize', gridResizeHandler)
+    gridResizeHandler = null
+  }
 })
 </script>
 

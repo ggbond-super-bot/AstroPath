@@ -1491,7 +1491,7 @@ function renderAiContent(content) {
 }
 
 function saveReport() {
-  alert('报告已保存')
+  ElMessage.success('报告已保存')
 }
 
 function resetForm() {
@@ -1535,10 +1535,12 @@ function initParticles() {
   let mouseX = width / 2
   let mouseY = height / 2
 
-  document.addEventListener('mousemove', (e) => {
+  const mouseHandler = (e) => {
     mouseX = e.clientX
     mouseY = e.clientY
-  })
+  }
+  document.addEventListener('mousemove', mouseHandler)
+  let particleAnimFrame = 0
 
   function animate() {
     ctx.clearRect(0, 0, width, height)
@@ -1580,16 +1582,23 @@ function initParticles() {
       }
     })
 
-    requestAnimationFrame(animate)
+    particleAnimFrame = requestAnimationFrame(animate)
   }
 
   animate()
 
-  window.addEventListener('resize', () => {
+  const resizeHandler = () => {
     width = canvas.width = window.innerWidth
     height = canvas.height = window.innerHeight
-  })
-}
+  }
+  window.addEventListener('resize', resizeHandler)
+  
+  return () => {
+    cancelAnimationFrame(particleAnimFrame)
+    document.removeEventListener('mousemove', mouseHandler)
+    window.removeEventListener('resize', resizeHandler)
+  }
+
 
 // ═══════════════ WATCHERS ═══════════════
 // Sync local form to global state whenever it changes
@@ -1611,8 +1620,10 @@ watch(() => form, () => {
 }, { deep: true })
 
 // ═══════════════ LIFECYCLE ═══════════════
+let cleanupParticles = null
+
 onMounted(() => {
-  initParticles()
+  cleanupParticles = initParticles()
   // Sync from global state on mount
   if (assessmentState.hasData.value) {
     form.basic = { ...assessmentState.form.value.basic }
@@ -1620,13 +1631,13 @@ onMounted(() => {
     form.practice.internships = [...assessmentState.form.value.practice.internships]
     form.practice.competitions = [...assessmentState.form.value.practice.competitions]
     form.practice.volunteers = [...assessmentState.form.value.practice.volunteers]
-    console.log('已恢复上次填写的评估数据')
+    // Restored previous assessment data
   }
   // Restore last scene if user has data and was not on hero page
   const savedScene = assessmentState.currentScene.value
   if (savedScene > 0) {
     currentScene.value = savedScene
-    console.log(`已恢复到上次浏览的页面: Scene ${savedScene}`)
+    // Restored to previous scene
     // Initialize radar chart and score animation if restored to results page
     if (savedScene === 4) {
       nextTick(() => {
@@ -1641,12 +1652,13 @@ onMounted(() => {
   const savedReport = assessmentState.report.value
   if (savedReport && savedScene === 4) {
     aiStream.content = savedReport
-    console.log('已恢复上次的 AI 评估报告')
+    // Restored previous AI report
   }
 })
 
 onUnmounted(() => {
   if (radarChart) radarChart.dispose()
+  if (cleanupParticles) cleanupParticles()
 })
 </script>
 

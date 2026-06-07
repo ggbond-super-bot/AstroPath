@@ -284,7 +284,6 @@ ${JSON.stringify(schoolsList, null, 2)}
     providerId: string,
     _onStream?: (content: string) => void
   ): Promise<{ recommendations: AIRecommendation[], summary: string }> => {
-    console.log('[AI Recommendation] generateRecommendations called, providerId:', providerId)
     globalState.startRecommendation(assessment, preference, providerId)
 
     try {
